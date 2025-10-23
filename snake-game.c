@@ -1,0 +1,132 @@
+#include <stdlib.h>
+#include <curses.h>
+#include <unistd.h>
+#include <time.h>
+
+//GAME CHARACTERS
+#define SNAKE_BODY "*"
+#define FOOD "@"
+#define BORDER "#"
+
+
+//BORDER LIMITS
+#define X_BORDER 41
+#define Y_BORDER 41
+
+
+void draw_border(int x_max, int y_max);
+void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
+void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size);
+bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
+
+
+void main(){
+
+	srand(time(NULL));
+
+	int posX[(X_BORDER - 1) * (Y_BORDER - 1)] = {0};
+	int posY[(X_BORDER - 1) * (Y_BORDER - 1)] = {0};
+	int foodX = 1 + rand() % (X_BORDER - 1);
+	int foodY = 1 + rand() % (Y_BORDER - 1);
+	int dirX = 1;
+	int dirY = 0;
+	int snake_size = 1;
+	bool game_over = false;
+
+	//initial position
+	posX[0] = 1;
+	posY[0] = 1;
+
+	WINDOW* win = initscr();
+	keypad(win, true);
+	nodelay(win, true);
+
+	while(!game_over){
+		draw_border(X_BORDER, Y_BORDER);
+		int pressed = wgetch(win);
+
+		if(pressed == KEY_LEFT){
+			dirX = -1;
+			dirY = 0;
+		}
+
+		if(pressed == KEY_RIGHT){
+			dirX = 1;
+			dirY = 0;
+		}
+
+		if(pressed == KEY_DOWN){
+			dirX = 0;
+			dirY = 1;
+		}
+
+		if(pressed == KEY_UP){
+			dirX = 0;
+			dirY = -1;
+		}
+		update_snake(posX, posY, snake_size);
+		posX[0] += dirX;
+		posY[0] += dirY;
+		erase();
+		draw_snake(posX, posY, snake_size);
+		mvaddstr(foodY, foodX, FOOD);
+
+
+		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
+
+		if(foodX == posX[0] && foodY == posY[0]){
+			foodX = 1 + rand() % (X_BORDER - 1);
+			foodY = 1 + rand() % (Y_BORDER - 1);
+			snake_size++;
+		}
+
+  		usleep(100000);
+	}
+
+
+	endwin();
+}
+
+void update_snake(int *all_x_axis, int *all_y_axis, int snake_size){
+	int prevX = all_x_axis[0], prevY = all_y_axis[0];
+	int tempX, tempY;
+	for(int i = 1; i < snake_size; i++){
+		
+		//Updating X-axis values
+		tempX = all_x_axis[i];
+		all_x_axis[i] = prevX;
+		prevX = tempX;
+
+		//Updating Y-axis values
+		tempY = all_y_axis[i];
+		all_y_axis[i] = prevY;
+		prevY = tempY;
+	}
+}
+
+void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size){
+	for(int i = 0; i < snake_size; i++) mvaddstr(all_y_axis[i], all_x_axis[i], SNAKE_BODY);
+}
+
+bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size){
+	int x_head = all_x_axis[0], y_head = all_y_axis[0];
+	if(x_head == 0 || x_head == X_BORDER || y_head == 0 || y_head == Y_BORDER) return true;
+
+	for(int i = 1; i < snake_size; i++) if(all_x_axis[i] == x_head && all_y_axis[i] == y_head) return true;
+
+	return false;
+}
+
+void draw_border(int x_max, int y_max){
+	//draw the X-axis borders
+	for(int i = 0; i < x_max; i++){
+		mvaddstr(0, i, BORDER);
+		mvaddstr(y_max, i, BORDER);
+	}
+
+	//draw the Y-axis borders
+	for(int i = 0; i < y_max; i++){
+		mvaddstr(i, 0, BORDER);
+		mvaddstr(i, x_max, BORDER);
+	}
+}
