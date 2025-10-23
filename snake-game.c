@@ -4,17 +4,19 @@
 #include <time.h>
 
 //GAME CHARACTERS
-#define SNAKE_BODY "*"
+#define SNAKE_BODY "O"
 #define FOOD "@"
 #define BORDER "#"
 
 
 //BORDER LIMITS
-#define X_BORDER 41
-#define Y_BORDER 41
+#define X_MIN_BORDER 0
+#define X_MAX_BORDER 41
+#define Y_MIN_BORDER 0
+#define Y_MAX_BORDER 41
 
 
-void draw_border(int x_max, int y_max);
+void draw_border(int x_max, int x_min, int y_max, int y_min);
 void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
@@ -24,10 +26,10 @@ void main(){
 
 	srand(time(NULL));
 
-	int posX[(X_BORDER - 1) * (Y_BORDER - 1)] = {0};
-	int posY[(X_BORDER - 1) * (Y_BORDER - 1)] = {0};
-	int foodX = 1 + rand() % (X_BORDER - 1);
-	int foodY = 1 + rand() % (Y_BORDER - 1);
+	int posX[(X_MAX_BORDER - X_MIN_BORDER - 1) * (Y_MAX_BORDER - Y_MIN_BORDER - 1)] = {0};
+	int posY[(X_MAX_BORDER - X_MIN_BORDER - 1) * (Y_MAX_BORDER - Y_MIN_BORDER - 1)] = {0};
+	int foodX = 1 + rand() % (X_MAX_BORDER - X_MIN_BORDER - 1);
+	int foodY = 1 + rand() % (X_MAX_BORDER - Y_MIN_BORDER - 1);
 	int dirX = 1;
 	int dirY = 0;
 	int snake_size = 1;
@@ -42,7 +44,7 @@ void main(){
 	nodelay(win, true);
 
 	while(!game_over){
-		draw_border(X_BORDER, Y_BORDER);
+		draw_border(X_MAX_BORDER, X_MIN_BORDER, Y_MAX_BORDER, Y_MIN_BORDER);
 		int pressed = wgetch(win);
 
 		if(pressed == KEY_LEFT){
@@ -75,8 +77,8 @@ void main(){
 		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
 
 		if(foodX == posX[0] && foodY == posY[0]){
-			foodX = 1 + rand() % (X_BORDER - 1);
-			foodY = 1 + rand() % (Y_BORDER - 1);
+			foodX = 1 + rand() % (X_MAX_BORDER - X_MIN_BORDER - 1);
+			foodY = 1 + rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1);
 			snake_size++;
 		}
 
@@ -110,23 +112,23 @@ void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size){
 
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size){
 	int x_head = all_x_axis[0], y_head = all_y_axis[0];
-	if(x_head == 0 || x_head == X_BORDER || y_head == 0 || y_head == Y_BORDER) return true;
+	if(x_head == X_MIN_BORDER || x_head == X_MAX_BORDER || y_head == Y_MIN_BORDER || y_head == Y_MAX_BORDER) return true;
 
 	for(int i = 1; i < snake_size; i++) if(all_x_axis[i] == x_head && all_y_axis[i] == y_head) return true;
 
 	return false;
 }
 
-void draw_border(int x_max, int y_max){
+void draw_border(int x_max, int x_min, int y_max, int y_min){
 	//draw the X-axis borders
-	for(int i = 0; i < x_max; i++){
-		mvaddstr(0, i, BORDER);
+	for(int i = x_min; i < x_max; i++){
+		mvaddstr(y_min, i, BORDER);
 		mvaddstr(y_max, i, BORDER);
 	}
 
 	//draw the Y-axis borders
-	for(int i = 0; i < y_max; i++){
-		mvaddstr(i, 0, BORDER);
+	for(int i = y_min; i < y_max; i++){
+		mvaddstr(i, x_min, BORDER);
 		mvaddstr(i, x_max, BORDER);
 	}
 }
