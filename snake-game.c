@@ -28,16 +28,16 @@ void main(){
 
 	int posX[(X_MAX_BORDER - X_MIN_BORDER - 1) * (Y_MAX_BORDER - Y_MIN_BORDER - 1)] = {0};
 	int posY[(X_MAX_BORDER - X_MIN_BORDER - 1) * (Y_MAX_BORDER - Y_MIN_BORDER - 1)] = {0};
-	int foodX = 1 + rand() % (X_MAX_BORDER - X_MIN_BORDER - 1);
-	int foodY = 1 + rand() % (X_MAX_BORDER - Y_MIN_BORDER - 1);
+	int foodX = X_MIN_BORDER + 1 + (rand() % (X_MAX_BORDER - X_MIN_BORDER - 1));
+	int foodY = Y_MIN_BORDER + 1 + (rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1));
 	int dirX = 1;
 	int dirY = 0;
 	int snake_size = 1;
 	bool game_over = false;
 
 	//initial position
-	posX[0] = 1;
-	posY[0] = 1;
+	posX[0] = X_MIN_BORDER + 1;
+	posY[0] = Y_MIN_BORDER + 1;
 
 	WINDOW* win = initscr();
 	keypad(win, true);
@@ -77,8 +77,8 @@ void main(){
 		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
 
 		if(foodX == posX[0] && foodY == posY[0]){
-			foodX = 1 + rand() % (X_MAX_BORDER - X_MIN_BORDER - 1);
-			foodY = 1 + rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1);
+			foodX = X_MIN_BORDER + 1 + (rand() % (X_MAX_BORDER - X_MIN_BORDER - 1));
+			foodY = Y_MIN_BORDER + 1 + (rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1));
 			snake_size++;
 		}
 
