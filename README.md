@@ -60,6 +60,8 @@ You also can define the position of the map limits setting the (x, y) coordinate
 
 The game was entirely developed using **C programming language** and **GNU Nano** as code editor.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/1853px-C_Programming_Language.svg.png" width="80" height="80" />
+<p float="left">
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/1853px-C_Programming_Language.svg.png" width="80" height="80" />
+	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gnu-nano.svg/1200px-Gnu-nano.svg.png" width="80", height="80"/>
+</p>
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gnu-nano.svg/1200px-Gnu-nano.svg.png" width="80", height="80"/>
