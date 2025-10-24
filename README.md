@@ -62,6 +62,6 @@ The game was entirely developed using **C programming language** and **GNU Nano*
 
 <p float="left">
 	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/1853px-C_Programming_Language.svg.png" width="80" height="80" />
-	<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Gnu-nano.svg/1200px-Gnu-nano.svg.png" width="80", height="80"/>
+	<img src="https://ih1.redbubble.net/image.4813597893.3885/st,small,507x507-pad,600x600,f8f8f8.u6.jpg" width="80", height="80"/>
 </p>
 
