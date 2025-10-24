@@ -33,7 +33,7 @@ Now you can run the generated file
 
 # How to play
 
-You use the arrow keys to control the direction of the snake's head, whose body is represented by the "O" symbol. Your goal is to collect as much food as possible, represented by the "@" symbol, without the snake's head colliding with the wall (represented by the "#" symbol) or its own body. There's a score counter below the game map that shows your current score.
+You use the arrow keys to control the direction of the snake's head, whose body is represented by an arrow symbol ('<', '>', '^', 'v'). Your goal is to collect as much food as possible, represented by the "@" symbol, without the snake's head colliding with the wall (represented by the "#" symbol) or its own body. There's a score counter below the game map that shows your current score.
 
 # Game settings
 
@@ -42,6 +42,10 @@ In the game file (snake-game.c), you can change the symbols that represents the 
 ```c
 //GAME CHARACTERS
 #define SNAKE_BODY "O"
+#define LEFT_SNAKE_HEAD "<"
+#define RIGHT_SNAKE_HEAD ">"
+#define UP_SNAKE_HEAD "^"
+#define DOWN_SNAKE_HEAD "v"
 #define FOOD "@"
 #define BORDER "#"
 ```

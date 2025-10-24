@@ -5,6 +5,10 @@
 
 //GAME CHARACTERS
 #define SNAKE_BODY "O"
+#define LEFT_SNAKE_HEAD "<"
+#define RIGHT_SNAKE_HEAD ">"
+#define UP_SNAKE_HEAD "^"
+#define DOWN_SNAKE_HEAD "v"
 #define FOOD "@"
 #define BORDER "#"
 
@@ -17,7 +21,7 @@
 
 void draw_border(int x_max, int x_min, int y_max, int y_min);
 void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
-void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size);
+void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size, char *head);
 void score(int y_pos, int x_pos, int score);
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
 void gen_valid_rand_food(int *foodX, int *foodY, int *all_x_axis, int *all_y_axis, int snake_size);
@@ -41,6 +45,9 @@ void main(){
 	posX[0] = X_MIN_BORDER + 1;
 	posY[0] = Y_MIN_BORDER + 1;
 
+	//initial snake head char
+	char *head = RIGHT_SNAKE_HEAD;
+
 	WINDOW* win = initscr();
 	keypad(win, true);
 	nodelay(win, true);
@@ -50,21 +57,25 @@ void main(){
 		int pressed = wgetch(win);
 
 		if(pressed == KEY_LEFT){
+			head = LEFT_SNAKE_HEAD;
 			dirX = -1;
 			dirY = 0;
 		}
 
 		if(pressed == KEY_RIGHT){
+			head = RIGHT_SNAKE_HEAD;
 			dirX = 1;
 			dirY = 0;
 		}
 
 		if(pressed == KEY_DOWN){
+			head = DOWN_SNAKE_HEAD;
 			dirX = 0;
 			dirY = 1;
 		}
 
 		if(pressed == KEY_UP){
+			head = UP_SNAKE_HEAD;
 			dirX = 0;
 			dirY = -1;
 		}
@@ -72,7 +83,7 @@ void main(){
 		posX[0] += dirX;
 		posY[0] += dirY;
 		erase();
-		draw_snake(posX, posY, snake_size);
+		draw_snake(posX, posY, snake_size, head);
 		mvaddstr(foodY, foodX, FOOD);
 		score(Y_MAX_BORDER + 3, X_MIN_BORDER, snake_size - 1);
 
@@ -122,8 +133,11 @@ void update_snake(int *all_x_axis, int *all_y_axis, int snake_size){
 	}
 }
 
-void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size){
-	for(int i = 0; i < snake_size; i++) mvaddstr(all_y_axis[i], all_x_axis[i], SNAKE_BODY);
+void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size, char *head){
+	for(int i = 0; i < snake_size; i++) {
+		if(i > 0) mvaddstr(all_y_axis[i], all_x_axis[i], SNAKE_BODY);
+		else mvaddstr(all_y_axis[i], all_x_axis[i], head);
+	}
 }
 
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size){
