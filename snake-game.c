@@ -20,6 +20,8 @@ void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 void score(int y_pos, int x_pos, int score);
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
+void gen_valid_rand_food(int *foodX, int *foodY, int *all_x_axis, int *all_y_axis, int snake_size);
+
 
 
 void main(){
@@ -78,9 +80,8 @@ void main(){
 		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
 
 		if(foodX == posX[0] && foodY == posY[0]){
-			foodX = X_MIN_BORDER + 1 + (rand() % (X_MAX_BORDER - X_MIN_BORDER - 1));
-			foodY = Y_MIN_BORDER + 1 + (rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1));
 			snake_size++;
+			gen_valid_rand_food(&foodX, &foodY, posX, posY, snake_size);
 		}
 
   		usleep(100000);
@@ -88,6 +89,20 @@ void main(){
 
 
 	endwin();
+}
+
+void gen_valid_rand_food(int *foodX, int *foodY, int *all_x_axis, int *all_y_axis, int snake_size){
+	bool invalid_rand_food = true;
+	int flag;
+	while(invalid_rand_food){
+		flag = 1; // if '1', it's means that the generated value is a valid position for food
+		*foodX = X_MIN_BORDER + 1 + (rand() % (X_MAX_BORDER - X_MIN_BORDER - 1));
+		*foodY = Y_MIN_BORDER + 1 + (rand() % (Y_MAX_BORDER - Y_MIN_BORDER - 1));
+		
+		for(int i = 0; i < snake_size; i++) if(*foodX == all_x_axis[i] && *foodY == all_y_axis[i]) flag = 0;
+
+		if(flag & 1) invalid_rand_food = false;
+	}
 }
 
 void update_snake(int *all_x_axis, int *all_y_axis, int snake_size){
