@@ -15,10 +15,10 @@
 #define Y_MIN_BORDER 0
 #define Y_MAX_BORDER 41
 
-
 void draw_border(int x_max, int x_min, int y_max, int y_min);
 void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size);
+void score(int y_pos, int x_pos, int score);
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
 
 
@@ -72,6 +72,7 @@ void main(){
 		erase();
 		draw_snake(posX, posY, snake_size);
 		mvaddstr(foodY, foodX, FOOD);
+		score(Y_MAX_BORDER + 3, X_MIN_BORDER, snake_size - 1);
 
 
 		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
@@ -117,6 +118,12 @@ bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size){
 	for(int i = 1; i < snake_size; i++) if(all_x_axis[i] == x_head && all_y_axis[i] == y_head) return true;
 
 	return false;
+}
+
+void score(int y_pos, int x_pos, int score){
+	char buffer[256];
+	sprintf(buffer, "SCORE: %d", score);
+	mvaddstr(y_pos, x_pos, buffer);
 }
 
 void draw_border(int x_max, int x_min, int y_max, int y_min){
