@@ -3,6 +3,10 @@
 #include <unistd.h>
 #include <time.h>
 
+//MACROS
+#define frb(path) fopen(path, "rb+")
+#define fwb(path) fopen(path, "wb+")
+
 //GAME CHARACTERS
 #define SNAKE_BODY "O"
 #define LEFT_SNAKE_HEAD "<"
@@ -22,7 +26,7 @@
 void draw_border(int x_max, int x_min, int y_max, int y_min);
 void update_snake(int *all_x_axis, int *all_y_axis, int snake_size);
 void draw_snake(int *all_x_axis, int *all_y_axis, int snake_size, char *head);
-void score(int y_pos, int x_pos, int score);
+void score(int y_pos, int x_pos, int score, int max_score);
 bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size);
 void gen_valid_rand_food(int *foodX, int *foodY, int *all_x_axis, int *all_y_axis, int snake_size);
 
@@ -45,7 +49,16 @@ void main(){
 	posX[0] = X_MIN_BORDER + 1;
 	posY[0] = Y_MIN_BORDER + 1;
 
-	//initial snake head char
+	//max score
+	FILE *f = frb("highest_score.bin");
+
+	if(f == NULL) f = fwb("highest_score.bin");
+
+	int max_score = -1;
+
+	fread(&max_score, sizeof(int), 1, f);
+
+	//initial snake head ochar
 	char *head = RIGHT_SNAKE_HEAD;
 
 	WINDOW* win = initscr();
@@ -85,7 +98,7 @@ void main(){
 		erase();
 		draw_snake(posX, posY, snake_size, head);
 		mvaddstr(foodY, foodX, FOOD);
-		score(Y_MAX_BORDER + 3, X_MIN_BORDER, snake_size - 1);
+		score(Y_MAX_BORDER + 3, X_MIN_BORDER, snake_size - 1, max_score);
 
 
 		if(is_invalid_position(posX, posY, snake_size)) game_over = true;
@@ -97,7 +110,12 @@ void main(){
 
   		usleep(100000);
 	}
-
+	
+	//update max score
+	if(--snake_size > max_score) {
+		fseek(f, 0, SEEK_SET);
+		fwrite(&snake_size, sizeof(int), 1, f);
+	}
 
 	endwin();
 }
@@ -149,10 +167,15 @@ bool is_invalid_position(int *all_x_axis, int *all_y_axis, int snake_size){
 	return false;
 }
 
-void score(int y_pos, int x_pos, int score){
+void score(int y_pos, int x_pos, int score, int max_score){
 	char buffer[256];
 	sprintf(buffer, "SCORE: %d", score);
 	mvaddstr(y_pos, x_pos, buffer);
+
+	if(max_score > -1){
+		sprintf(buffer, "HIGHEST SCORE: %d", max_score);
+		mvaddstr(y_pos + 1, x_pos, buffer);
+	}
 }
 
 void draw_border(int x_max, int x_min, int y_max, int y_min){

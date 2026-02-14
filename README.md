@@ -60,6 +60,10 @@ You also can define the position of the map limits setting the (x, y) coordinate
 #define Y_MAX_BORDER 41
 ```
 
+# Storage
+
+After a game, your best score will be stored in the highest_score.bin file, and when you start over you can see your best score just bellow your current score
+
 ## Development resources
 
 The game was entirely developed using **C programming language** and **GNU Nano** as code editor.
